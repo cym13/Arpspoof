@@ -99,7 +99,7 @@ if __name__ == "__main__":
         os.system("/sbin/iptables -X")
         sys.exit(0)
 
-    if ports is not None:
+    if args.ports is not None:
         set_iptables(args.target_ip, args.server, args.ports)
         signal.signal(signal.SIGINT, signal_handler)
 
