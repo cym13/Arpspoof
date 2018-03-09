@@ -17,6 +17,7 @@ arp_thread = None
 target = None
 
 def enable_ip_forwarding():
+    print("[+] Enabling IP forwarding")
     with open('/proc/sys/net/ipv4/ip_forward', 'w') as fr:
         ret = subprocess.Popen(['echo', '1'], stdout=fr)
         if ret == 1:
@@ -25,6 +26,7 @@ def enable_ip_forwarding():
 
 
 def disable_ip_forwarding():
+    print("[+] Disabling IP forwarding")
     with open('/proc/sys/net/ipv4/ip_forward', 'w') as fr:
         ret = subprocess.Popen(['echo', '0'], stdout=fr)
         if ret == 1:
@@ -33,6 +35,7 @@ def disable_ip_forwarding():
 
 
 def set_iptables(ip, proxy_server=None, ports=None):
+    print("[+] Modifying iptables")
     if not ports:
         ports = '80'
     os.system("/sbin/iptables -F")
